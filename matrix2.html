@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Matrix Background with Cube</title>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: black;
+  }
+</style>
+</head>
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* =======================
+   THREE.JS SETUP
+======================= */
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
+camera.position.z = 3;
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+/* =======================
+   MATRIX BACKGROUND
+======================= */
+const bgCanvas = document.createElement("canvas");
+bgCanvas.width = window.innerWidth;
+bgCanvas.height = window.innerHeight;
+const bgCtx = bgCanvas.getContext("2d");
+
+const bgTexture = new THREE.CanvasTexture(bgCanvas);
+scene.background = bgTexture;
+
+const bgFontSize = 18;
+let bgColumns = Math.floor(bgCanvas.width / bgFontSize);
+let bgDrops = Array(bgColumns).fill(0);
+
+/* =======================
+   MATRIX CUBE TEXTURE
+======================= */
+const cubeCanvas = document.createElement("canvas");
+cubeCanvas.width = 600;
+cubeCanvas.height = 600;
+const cubeCtx = cubeCanvas.getContext("2d");
+
+const cubeTexture = new THREE.CanvasTexture(cubeCanvas);
+
+const cubeMaterial = new THREE.MeshBasicMaterial({ map: cubeTexture });
+const cube = new THREE.Mesh(
+  new THREE.BoxGeometry(1.5, 1.5, 1.5),
+  cubeMaterial
+);
+scene.add(cube);
+
+/* =======================
+   MATRIX CUBE SETTINGS
+======================= */
+const cubeFontSize = 26;
+const cubeColumns = Math.floor(cubeCanvas.width / cubeFontSize);
+const cubeDrops = Array(cubeColumns).fill(0);
+let time = 0;
+
+/* =======================
+   DRAW BACKGROUND MATRIX
+======================= */
+function drawBackgroundMatrix() {
+  bgCtx.fillStyle = "rgba(0, 0, 0, 0.08)";
+  bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+
+  bgCtx.fillStyle = "#00ff66";
+  bgCtx.font = `${bgFontSize}px monospace`;
+
+  for (let i = 0; i < bgDrops.length; i++) {
+    const char = Math.random() > 0.5 ? "1" : "0";
+    bgCtx.fillText(char, i * bgFontSize, bgDrops[i] * bgFontSize);
+
+    if (bgDrops[i] * bgFontSize > bgCanvas.height && Math.random() > 0.97) {
+      bgDrops[i] = 0;
+    }
+    bgDrops[i]++;
+  }
+
+  bgTexture.needsUpdate = true;
+}
+
+/* =======================
+   DRAW CUBE MATRIX (WAVE)
+======================= */
+function drawCubeMatrix() {
+  cubeCtx.fillStyle = "rgba(0, 0, 0, 0.15)";
+  cubeCtx.fillRect(0, 0, cubeCanvas.width, cubeCanvas.height);
+
+  cubeCtx.fillStyle = "#00ff66";
+  cubeCtx.font = `${cubeFontSize}px monospace`;
+
+  time += 0.05;
+
+  for (let i = 0; i < cubeDrops.length; i++) {
+    const char = Math.random() > 0.5 ? "1" : "0";
+
+    const wave = Math.sin(time + i * 0.4) * 6;
+
+    const x = i * cubeFontSize + wave;
+    const y = cubeDrops[i] * cubeFontSize + wave;
+
+    cubeCtx.fillText(char, x, y);
+
+    if (y > cubeCanvas.height && Math.random() > 0.97) {
+      cubeDrops[i] = 0;
+    }
+    cubeDrops[i]++;
+  }
+
+  cubeTexture.needsUpdate = true;
+}
+
+/* =======================
+   ANIMATION LOOP
+======================= */
+function animate() {
+  requestAnimationFrame(animate);
+
+  drawBackgroundMatrix();
+  drawCubeMatrix();
+
+  cube.rotation.x += 0.008;
+  cube.rotation.y += 0.01;
+
+  renderer.render(scene, camera);
+}
+
+animate();
+
+/* =======================
+   RESIZE HANDLER
+======================= */
+window.addEventListener("resize", () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  bgCanvas.width = window.innerWidth;
+  bgCanvas.height = window.innerHeight;
+
+  bgColumns = Math.floor(bgCanvas.width / bgFontSize);
+  bgDrops = Array(bgColumns).fill(0);
+});
+</script>
+
+</body>
+</html>
