@@ -8,7 +8,8 @@ CSS3
 JavaScript (Vanilla)
 VS Code
 
-![Demo Video](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbWJ6bXp1MThyaTkzbG1iMWZwOXljaXh3eGx4Nndid3V0dmJ4dmhsZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/nLUSmb3Vqbv2zvRKP1/giphy.gif)
+[![Play Demo](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbWJ6bXp1MThyaTkzbG1iMWZwOXljaXh3eGx4Nndid3V0dmJ4dmhsZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/nLUSmb3Vqbv2zvRKP1/giphy.gif)](https://media1.giphy.com/media/nLUSmb3Vqbv2zvRKP1/giphy.gif)
+
 
 What I Learned
 
